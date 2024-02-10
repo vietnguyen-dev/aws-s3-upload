@@ -85,7 +85,7 @@ export default function Home() {
 					</button>
 				</form>
 			) : (
-				<p className="mb-3">thats enough images please dont overload my server</p>
+				<p className="mb-3">thats enough images please dont overload my server :3</p>
 			)}
 			{imageList.length === 0 ? (
 				<p>No image Uploaded</p>
