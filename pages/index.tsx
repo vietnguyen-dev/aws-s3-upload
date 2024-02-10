@@ -24,6 +24,12 @@ export default function Home() {
 		}
 	};
 
+	async function getImages() {
+		const response = await fetch("/api/image");
+		const data = await response.json();
+		setImageList(data.urls);
+	}
+
 	async function uploadImage(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		if (!file) {
@@ -41,7 +47,7 @@ export default function Home() {
 			if (response.ok) {
 				console.log("File uploaded successfully");
 				// Handle success
-				window.location.reload();
+				setTimeout(async () => await getImages(), 500);
 			} else {
 				const errorMessage = await response.text();
 				console.error("Upload failed:", errorMessage);
@@ -64,7 +70,7 @@ export default function Home() {
 			});
 			if (response.ok) {
 				console.log("file deleted successfully");
-				window.location.reload();
+				await getImages();
 			} else {
 				const errorMsg = await response.text();
 				console.error("delete failed", errorMsg);
