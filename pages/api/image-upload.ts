@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.ogg/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import AWS from "aws-sdk";
-import { IncomingForm } from "formidable";
+import { IncomingForm, Fields, Files } from "formidable";
 import fs from "fs";
 
 type SuccessGetData = {
@@ -23,16 +23,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	const bucket = process.env.bucket!;
 
 	if (req.method === "POST") {
-		return new Promise((resolve) => {
+		return new Promise<void>((resolve) => {
 			try {
 				const form = new IncomingForm();
-				form.parse(req, (err, fields, files) => {
+				form.parse(req, (err: Error, fields: Fields, files: Files) => {
 					if (err) {
 						console.error("Error parsing form data:", err);
 						return res.status(500).json({
 							message: "Internal Server Error",
 						});
-						return resolve();
+					}
+					if (!files.file || !fields.fileName) {
+						return res.status(500).json({
+							message: "Internal Server Error",
+						});
 					}
 					console.log("Parsed form fields:", fields);
 					const fileData = fs.readFileSync(files.file[0].filepath);
@@ -44,22 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					}).promise();
 					// Handle the parsed form data
 					return res.status(200).json({ message: "it worked" });
-					return resolve();
 				});
-				// Access file details
-				// Access the uploaded file and file name
-				/*if (!req.file) {
-				return res.status(400).json({
-					message: "File content not found",
-				});
-			}
-
-			// Ensure req.body.fileName contains the file name
-			if (!req.body.fileName) {
-				return res.status(400).json({
-					message: "File name not found",
-				});
-			}*/
 			} catch (err) {
 				console.log(err);
 				res.status(500).json({
