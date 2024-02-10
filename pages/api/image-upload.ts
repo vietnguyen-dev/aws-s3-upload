@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						return res.status(500).json({
 							message: "Internal Server Error",
 						});
-						resolve();
+						return resolve();
 					}
 					console.log("Parsed form fields:", fields);
 					const fileData = fs.readFileSync(files.file[0].filepath);
