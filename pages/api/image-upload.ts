@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					}).promise();
 					// Handle the parsed form data
 					return res.status(200).json({ message: "it worked" });
-					resolve();
+					return resolve();
 				});
 				// Access file details
 				// Access the uploaded file and file name
